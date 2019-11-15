@@ -5,7 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import NavigationBar from "./Navbar";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import validator from "validator";
 
 import SideNavigationBar from "./SideNavBar";
 

@@ -83,7 +83,10 @@ class ProfileDetails extends Component {
       startDate: "",
       endDate: "",
       accepted: false,
-      paid: false
+      paid: false,
+      firstName: "",
+      lastName: "",
+      rate: ""
     },
     snackbaropen: false,
     snackbarmsg: ""
@@ -100,7 +103,7 @@ class ProfileDetails extends Component {
       .then(res => {
         console.log(res);
         this.setState({
-          profile: res.data.profile
+          profile: res.data.profile,
         });
       })
       .catch(err => {
@@ -112,12 +115,16 @@ class ProfileDetails extends Component {
     const field = event.target.name;
     let request = { ...this.state.request };
     request[field] = event.target.value;
+    this.state.request.firstName = this.state.profile.firstName;
+    this.state.request.lastName = this.state.profile.lastName;
+    this.state.request.rate = this.state.profile.rate;
     this.setState({ request });
   };
 
   sendRequest = () => {
     const token = localStorage.getItem("jwtToken");
     const request = this.state.request;
+
     axios
       .post("/users/sendrequest", request, {
         headers: { Authorization: `Bearer ${token}` }

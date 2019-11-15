@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -9,10 +9,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Avatar from "@material-ui/core/Avatar";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import NotificationButton from "./NotificationButton";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
@@ -32,112 +33,132 @@ const useStyles = makeStyles(theme => ({
     boxShadow: "none",
     position: "static"
   }
-}));
+});
 
-export default function NavigationBar() {
-  const classes = useStyles();
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClose = () => {
-    setAnchorEl(null);
+class NavigationBar extends Component {
+  state = {
+    anchorEl: null,
+    setAnchorEl: null,
+    token: localStorage.getItem("jwtToken"),
+    userId: localStorage.getItem("userId"),
+    profile: {}
   };
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
   };
 
-  const handleLogout = event => {
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleLogout = event => {
     event.preventDefault();
     localStorage.clear();
     window.location.href = "/";
   };
 
-  const token = localStorage.getItem("jwtToken");
-  let buttons;
-
-  if (token) {
-    buttons = (
-      <div>
-        <Button component={Link} to={"/profile"}>
-          BECOME A SITTER
-        </Button>
-        <Button component={Link} to={"/sitter-search"}>
-          My Sitters
-        </Button>
-        <NotificationButton></NotificationButton>
-        <Button component={Link} to={"/messages"}>
-          Messages
-        </Button>
-        <IconButton aria-label="avatar" onClick={handleClick}>
-          <Avatar
-            alt="Remy Sharp"
-            src={require("../images/07cc6abd390ab904abbf31db5e6ea20357f8b127.png")}
-            className={classes.bigAvatar}
-          />
-        </IconButton>
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right"
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right"
-          }}
-          open={open}
-          onClose={handleClose}
-        >
-          <MenuItem component={Link} to={"/profile"}>
-            Profile
-          </MenuItem>
-          <MenuItem component={Link} to={"/my-jobs"}>
-            My Jobs
-          </MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-        </Menu>
-      </div>
-    );
-  } else {
-    buttons = (
-      <div>
-        <Button
-          className={classes.menuButton}
-          color="inherit"
-          component={Link}
-          to={"/profile"}
-        >
-          BECOME A SITTER
-        </Button>
-        <Button
-          className={classes.menuButton}
-          variant="outlined"
-          color="secondary"
-          component={Link}
-          to={"/login"}
-        >
-          Log In
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          component={Link}
-          to={"/signup"}
-        >
-          Sign Up
-        </Button>
-      </div>
-    );
+  componentDidMount() {
+    axios.get(`/profile/get/${this.state.userId}`, { headers: { Authorization: `Bearer ${this.state.token}` } })
+    .then(res => {
+        this.setState({
+            profile: res.data.profile
+        });
+    })
+    .catch(err => {
+        console.log("Error fetching and parsing data", err);
+    });
   }
+  
+  render() {
+    const { classes } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+    const { profile } = this.state;
 
-  return (
-    <div className={classes.root}>
-      <AppBar className={token ? classes.loggedInNavbar : classes.logInNavbar}>
+    let buttons;
+
+    if (this.state.token) {
+      buttons = (
+        <div>
+          <Button component={Link} to={"/profile"}>
+            BECOME A SITTER
+          </Button>
+          <Button component={Link} to={"/sitter-search"}>
+            My Sitters
+          </Button>
+          <NotificationButton></NotificationButton>
+          <Button component={Link} to={"/messages"}>
+            Messages
+          </Button>
+          <IconButton aria-label="avatar" onClick={this.handleClick}>
+            <Avatar
+              alt="Remy Sharp"
+              src={profile.photoUrl}
+              className={classes.bigAvatar}
+            />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right"
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            open={open}
+            onClose={this.handleClose}
+          >
+            <MenuItem component={Link} to={"/profile"}>
+              Profile
+            </MenuItem>
+            <MenuItem component={Link} to={"/my-jobs"}>
+              My Jobs
+            </MenuItem>
+            <MenuItem onClick={this.handleClose}>My account</MenuItem>
+            <MenuItem onClick={this.handleLogout}>Log Out</MenuItem>
+          </Menu>
+        </div>
+      );
+    } else {
+      buttons = (
+        <div>
+          <Button
+            className={classes.menuButton}
+            color="inherit"
+            component={Link}
+            to={"/profile"}
+          >
+            BECOME A SITTER
+          </Button>
+          <Button
+            className={classes.menuButton}
+            variant="outlined"
+            color="secondary"
+            component={Link}
+            to={"/login"}
+          >
+            Log In
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            component={Link}
+            to={"/signup"}
+          >
+            Sign Up
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className={classes.root}>
+      <AppBar className={this.state.token ? classes.loggedInNavbar : classes.logInNavbar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             <img
@@ -149,5 +170,8 @@ export default function NavigationBar() {
         </Toolbar>
       </AppBar>
     </div>
-  );
+    );
+  };
 }
+
+export default withStyles(styles, { withTheme: true })(NavigationBar);

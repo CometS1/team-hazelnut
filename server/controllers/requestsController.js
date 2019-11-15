@@ -1,6 +1,8 @@
 import Request from "../models/Request";
+import Profile from "../models/Profile";
+const ObjectId = require("mongodb").ObjectID;
 
-module.exports.createRequest = async function(req, res, next) {
+module.exports.createRequest = async function (req, res, next) {
   const request = {
     userId: req.user,
     requestedUserId: req.body.requestedUserId,
@@ -39,7 +41,7 @@ module.exports.createRequest = async function(req, res, next) {
   res.status(200).json({ message: `Request was successfully sent!` });
 };
 
-module.exports.updateRequest = async function(req, res, next) {
+module.exports.updateRequest = async function (req, res, next) {
   let request = await Request.findOne({
     userId: req.user,
     requestedUserId: req.body.requestedUserId
@@ -60,7 +62,7 @@ module.exports.updateRequest = async function(req, res, next) {
 };
 
 // get the requests that others sent to you
-module.exports.getRequests = async function(req, res, next) {
+module.exports.getRequests = async function (req, res, next) {
   let requests = await Request.find({ requestedUserId: req.user });
   if (!requests) {
     res.status(404).json({ error: "No requests were found" });
@@ -69,12 +71,60 @@ module.exports.getRequests = async function(req, res, next) {
   }
 };
 
+// get the requests that others sent to you with profiles
+module.exports.getRequestsWithProfile = async function (req, res, next) {
+  
+  Request.aggregate([
+    {
+      $match: { userId: ObjectId(req.user) }
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "requestedUserId",
+        foreignField: "userId",
+        as: "profileInfo"
+      }
+    },
+    {
+      $unwind: "$profileInfo"
+    },
+  ], function (err, requests) {
+    if (err) return next(err);
+    res.status(200).json({ requests: requests });
+  })
+};
+
 // get the requests that you sent to others
-module.exports.getRequested = async function(req, res, next) {
+module.exports.getRequested = async function (req, res, next) {
   let requests = await Request.find({ userId: req.user });
   if (!requests) {
     res.status(404).json({ error: "No requests were found" });
   } else {
     res.status(200).json({ requests: requests });
   }
+};
+
+// get the requests that you sent to others with profile
+module.exports.getRequestedWithProfile = async function (req, res, next) {
+
+  Request.aggregate([
+    {
+      $match: { requestedUserId: ObjectId(req.user) }
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "requestedUserId",
+        foreignField: "userId",
+        as: "profileInfo"
+      }
+    },
+    {
+      $unwind: "$profileInfo"
+    },
+  ], function (err, requests) {
+    if (err) return next(err);
+    res.status(200).json({ requests: requests });
+  })
 };

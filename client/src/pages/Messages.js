@@ -157,11 +157,10 @@ class MessagesPage extends Component {
           conversations: res.data // Get all conversation
         });
         // save recipient Ids to get their profiles
-        res.data.map(con => {
+        res.data.map(con => 
           this.setState({
             recipientIds: [...this.state.recipientIds, con.recipientId._id]
-          });
-        });
+          }));
       })
       .catch(err => {
         console.log("Error fetching and parsing data", err);
@@ -179,11 +178,10 @@ class MessagesPage extends Component {
     axios
       .all(axiosArray)
       .then(res => {
-        res.data.map(profile => {
+        res.data.map(profile => 
           this.setState({
             recipientProfiles: [...this.state.recipientProfiles, profile]
-          });
-        });
+          }));
       })
       .catch(err => {
         console.log(err);
@@ -262,8 +260,8 @@ class MessagesPage extends Component {
                 <h3>Inbox Messages</h3>
               </Grid>
               <Grid item xs={1} className={classes.title}>
-                <IconButton size="small" className={classes.addIcon}>
-                  <AddBoxIcon onClick={this.handleOpen} />
+                <IconButton size="small" className={classes.addIcon} onClick={this.handleOpen}>
+                  <AddBoxIcon />
                 </IconButton>
                 <Modal
                   aria-labelledby="transition-modal-title"
