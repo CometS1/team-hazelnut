@@ -15,7 +15,6 @@ import ProfilePayment from "./pages/ProfilePayment";
 import MyJobsPage from "./pages/MyJobs";
 import ProfileDetails from "./pages/ProfileDetails";
 import PrivateRoute from "./pages/PrivateRoute";
-
 import MessagesPage from "./pages/Messages";
 
 function App() {

@@ -26,19 +26,25 @@ The following software is required to be installed on your system:
 
     ```https://github.com/hatchways/team-hazelnut.git```
 
-* Install all dependencies on the both front end and back end. 
+* Install all dependencies on the both front end and back end. You must have both the client and server running in order for the app to work. 
 
     **Frontend (Client)**
 
     * Go to client directory, and run `npm install`.
 
-    * To start client, run `npm start`.
+    * To start client, run `npm start` from the client directory.
 
     **Backend (Server)**
         
-    * Go to server directory, and run `npm install`.
+    * In a different Commant Prompt, go to server directory, and run `npm install`.
 
-    * To start server, run `npm start`.
+    * To start server, run `npm start` from the server directory.
+
+    **Both (Client and Server)**
+        
+    * Run `npm install` from both the client and server directory.
+
+    * To start both in one prompt, run `npm run both` from the server directory.
 
 * Ensure that you have MongoDB installed globally on your system.
 

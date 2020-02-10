@@ -157,6 +157,10 @@ class SignUpPage extends Component {
     this.setState({ disabled: false });
   };
 
+  handleEnterButton = event => {
+    if (event.keyCode === 13){document.getElementById('signup-button').click()}
+  }
+
   render() {
     return (
       <div>
@@ -268,12 +272,14 @@ class SignUpPage extends Component {
                         type="password"
                         value={this.state.confirmPassword}
                         onChange={this.handleConfirmPasswordChange}
+                        onKeyDown={this.handleEnterButton}
                         fullWidth
                       />
                     </Grid>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8} className="center">
                       <Button
+                        id="signup-button"
                         variant="contained"
                         onClick={this.handleSubmit}
                         fullWidth

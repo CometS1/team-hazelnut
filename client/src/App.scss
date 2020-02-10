@@ -36,6 +36,10 @@ h1 {
   text-align: center;
 }
 
+.font-medium{
+  font-size: large;
+}
+
 // Legend for codes below: 
 // m = margin, p = padding
 // t = top, b = bottom, r = right, l = left
@@ -47,6 +51,10 @@ h1 {
 
 .mt-0 {
   margin-top: 0 !important;
+}
+
+.p-1 {
+  padding: 1rem !important;
 }
 
 .pb-0 {

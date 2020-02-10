@@ -101,13 +101,12 @@ class ProfileDetails extends Component {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
-        console.log(res);
         this.setState({
           profile: res.data.profile,
         });
       })
       .catch(err => {
-        console.log("Error fetching and parsing data", err);
+        console.log("Problem fetching user profile |", err);
       });
   }
 
@@ -115,9 +114,9 @@ class ProfileDetails extends Component {
     const field = event.target.name;
     let request = { ...this.state.request };
     request[field] = event.target.value;
-    this.state.request.firstName = this.state.profile.firstName;
-    this.state.request.lastName = this.state.profile.lastName;
-    this.state.request.rate = this.state.profile.rate;
+    this.setState({ request: { firstName: this.state.profile.firstName } });
+    this.setState({ request: { lastName: this.state.profile.lastName } });
+    this.setState({ request: { rate: this.state.profile.rate } });
     this.setState({ request });
   };
 

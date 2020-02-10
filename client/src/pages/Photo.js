@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 
 import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 
 import "../App.scss";
 
@@ -19,9 +20,12 @@ const photoPageStyle = theme => ({
     marginBottom: theme.spacing(100)
   },
   bigAvatar: {
-    //Make Responsize
-    width: 300,
-    height: 300
+    width: 200,
+    height: 200
+  },
+
+  buttonText: {
+    textTransform: "none"
   }
 });
 
@@ -36,7 +40,7 @@ class PhotoPage extends Component {
 
   handlePhotoChange(event) {
     this.setState({
-      file: event.target.files[0]
+      file: URL.createObjectURL(event.target.files[0])
     });
   }
 
@@ -122,10 +126,11 @@ class PhotoPage extends Component {
                         justify="center"
                         alignItems="center"
                       >
-                        <label>
-                          Make sure your photo clearly shows your face
-                        </label>
+                        <Typography className="center" color="textSecondary">
+                          Be sure to use a photo that clearly shows your face
+                        </Typography>
                       </Grid>
+
                       <Grid
                         item
                         xs={12}
@@ -137,7 +142,7 @@ class PhotoPage extends Component {
                       >
                         <input
                           accept="image/*"
-                          className={ `${classes.input} ${"invisible"}`}
+                          className={`${classes.input} ${"invisible"}`}
                           id="contained-button-file"
                           multiple
                           type="file"
@@ -146,25 +151,29 @@ class PhotoPage extends Component {
                         />
                         <label htmlFor="contained-button-file">
                           <Button
-                            variant="contained"
+                            variant="outlined"
+                            color="secondary"
                             component="span"
-                            className={classes.button}
+                            size="large"
+                            className={classes.buttonText}
                           >
                             Upload a file from your device
                           </Button>
                         </label>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={12} className="center">
-                      <Button
-                        fullWidth
-                        size="large"
-                        variant="contained"
-                        className="submit-button"
-                        onClick={this.handleSubmit}
-                      >
-                        Save
-                      </Button>
+                      <Grid item xs={4}></Grid>
+                      <Grid item xs={4} className="center">
+                        <Button
+                          fullWidth
+                          size="large"
+                          variant="contained"
+                          className="submit-button"
+                          onClick={this.handleSubmit}
+                        >
+                          Save
+                        </Button>
+                      </Grid>
+                      <Grid item xs={4}></Grid>
                     </Grid>
                   </form>
                 </div>

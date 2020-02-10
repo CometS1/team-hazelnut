@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -32,6 +33,13 @@ const styles = theme => ({
     backgroundColor: "transparent",
     boxShadow: "none",
     position: "static"
+  },
+  dropDownName: {
+    display:"flex",
+    justifyContent: "center",
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 20,
   }
 });
 
@@ -59,17 +67,20 @@ class NavigationBar extends Component {
   };
 
   componentDidMount() {
-    axios.get(`/profile/get/${this.state.userId}`, { headers: { Authorization: `Bearer ${this.state.token}` } })
-    .then(res => {
-        this.setState({
+    if (this.state.userId !== null) {
+      axios.get(`/profile/get/${this.state.userId}`, { headers: { Authorization: `Bearer ${this.state.token}` } })
+        .then(res => {
+          this.setState({
             profile: res.data.profile
+          });
+        })
+        .catch(err => {
+          console.log("Error fetching and parsing data", err);
         });
-    })
-    .catch(err => {
-        console.log("Error fetching and parsing data", err);
-    });
+    }
+
   }
-  
+
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
@@ -94,7 +105,7 @@ class NavigationBar extends Component {
           <IconButton aria-label="avatar" onClick={this.handleClick}>
             <Avatar
               alt="Remy Sharp"
-              src={profile.photoUrl}
+              src={profile ? profile.photoUrl : require("../images/1a350ede83e5c0c4b87586c0d4bad0f66b86da37.png")}
               className={classes.bigAvatar}
             />
           </IconButton>
@@ -113,6 +124,9 @@ class NavigationBar extends Component {
             open={open}
             onClose={this.handleClose}
           >
+            {profile.firstName ?
+            <div><Box className={classes.dropDownName}>{profile.firstName} {profile.lastName}</Box><hr></hr></div>
+            : null}
             <MenuItem component={Link} to={"/profile"}>
               Profile
             </MenuItem>
@@ -158,18 +172,18 @@ class NavigationBar extends Component {
 
     return (
       <div className={classes.root}>
-      <AppBar className={this.state.token ? classes.loggedInNavbar : classes.logInNavbar}>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            <img
-              src={require("../images/loving-sitter-logo.png")}
-              alt="logo of app"
-            />
-          </Typography>
-          {buttons}
-        </Toolbar>
-      </AppBar>
-    </div>
+        <AppBar className={this.state.token ? classes.loggedInNavbar : classes.logInNavbar}>
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              <img
+                src={require("../images/loving-sitter-logo.png")}
+                alt="logo of app"
+              />
+            </Typography>
+            {buttons}
+          </Toolbar>
+        </AppBar>
+      </div>
     );
   };
 }

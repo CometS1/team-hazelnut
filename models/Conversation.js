@@ -4,14 +4,10 @@ import dbConnection from "./../db/mongoose";
 
 const ConversationSchema = new Schema(
     {
-        senderId :  {
+        members :  [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
-        },
-        recipientId : {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }
+        }]
     }
 );
 

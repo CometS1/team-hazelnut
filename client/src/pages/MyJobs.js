@@ -15,7 +15,6 @@ import axios from "axios";
 
 import Moment from 'react-moment';
 
-
 const photoPageStyle = theme => ({
   root: {
     backgroundColor: '#f8f6f6'

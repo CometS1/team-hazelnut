@@ -27,13 +27,15 @@ class LoginPage extends Component {
     this.setState({ password: event.target.value });
   };
 
+  handleEnterButton = event => {
+    if (event.keyCode === 13){document.getElementById('loginButton').click()}
+  }
+
   validate = () => {
     let emailError = "";
     var re = /[^@]+@[^.]+..+/;
     var test = re.test(this.state.email);
-    if (!test === true) {
-      emailError = "Invalid email";
-    }
+    if (!test === true) { emailError = "Invalid email"; }
 
     if (emailError) {
       this.setState({ emailError });
@@ -62,7 +64,6 @@ class LoginPage extends Component {
           const decoded = jwt_decode(token);
           localStorage.setItem("jwtToken", token);
           localStorage.setItem("userId", decoded.id);
-          console.log("successfully logged in ");
           this.props.history.push("/profile");
         })
         .catch(err => {
@@ -109,6 +110,7 @@ class LoginPage extends Component {
                         type="email"
                         value={this.state.email}
                         onChange={this.handleEmailChange}
+                        onKeyDown={this.handleEnterButton}
                         fullWidth
                       />
                       <div style={{ color: "red" }}>
@@ -128,12 +130,14 @@ class LoginPage extends Component {
                         type="password"
                         value={this.state.password}
                         onChange={this.handlePasswordChange}
+                        onKeyDown={this.handleEnterButton}
                         fullWidth
                       />
                     </Grid>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8} className="center">
                       <Button
+                        id="loginButton"
                         variant="contained"
                         onClick={this.handleSubmit}
                         fullWidth

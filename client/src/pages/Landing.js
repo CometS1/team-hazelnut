@@ -71,7 +71,7 @@ handleDropOffChange = event => {
                     <b>DROP IN / DROP OFF</b>
                   </p>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <TextField
                     type="date"
                     name="birthDate"
@@ -83,7 +83,7 @@ handleDropOffChange = event => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <TextField
                     type="date"
                     name="birthDate"
@@ -95,7 +95,7 @@ handleDropOffChange = event => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={4}></Grid>
+                <Grid item xs={2}></Grid>
 
                 <Grid item xs={8}>
                   <Button
